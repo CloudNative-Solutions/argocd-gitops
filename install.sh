@@ -1,7 +1,7 @@
 #!/bin/bash
 
 KEY_PAIR=cns-capi
-export ARGOCD_NS=argocd
+ARGOCD_NS=argocd
 ARGO_CHART=argo-cd
 
 create_key_pair() {
