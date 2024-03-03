@@ -1,0 +1,84 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  syncPolicy:
+    syncOptions:
+      - RespectIgnoreDifferences=true
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: charts/eks-cluster
+    repoURL: git@github.com:CloudNative-Solutions/gitops.git
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+      valuesObject:
+        managedControlPlaneSpec:
+          eksClusterName: cns-mgmt-eks
+          region: us-east-1
+          sshKeyName: cns-capi
+          version: v1.29
+          # bastion:
+          #   enabled: true
+
+          addons:
+            - name: vpc-cni
+              version: v1.16.2-eksbuild.1
+              conflictResolution: overwrite
+
+            - name: kube-proxy
+              version: v1.29.0-eksbuild.3
+              conflictResolution: overwrite
+
+            - name: coredns
+              version: v1.11.1-eksbuild.6
+              conflictResolution: overwrite
+
+          endpointAccess:
+            private: true
+            public: true # This is required because no VPN is created during the demo.
+
+          logging:
+            apiServer: false
+            audit: false
+            authenticator: false
+            controllerManager: false
+            scheduler: false
+
+        .nodeGroup: &nodeGroup
+          annotations:
+            cluster.x-k8s.io/replicas-managed-by: "external-autoscaler"
+          spec: &nodeGroupSpec
+            instanceType: m5.large
+            diskSize: 40
+            scaling:
+              minSize: 0
+              maxSize: 3
+
+        nodeGroups:
+          - name: cns-mgmt-eks-us-east-1a
+            <<: *nodeGroup
+            spec:
+              <<: *nodeGroupSpec
+              additionalTags:
+                Name: eks-worker-cns-mgmt-eks-us-east-1a
+              availabilityZones:
+                - us-east-1a
+          - name: cns-mgmt-eks-us-east-1b
+            <<: *nodeGroup
+            spec:
+              <<: *nodeGroupSpec
+              additionalTags:
+                Name: eks-worker-cns-mgmt-eks-us-east-1b
+              availabilityZones:
+                - us-east-1b
+       

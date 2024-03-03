@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+spec:
+  project: default
+  syncPolicy:
+    automated: {}
+    syncOptions:
+      - CreateNamespace=true
+  destination:
+    namespace: capi-operator-system
+    server: https://kubernetes.default.svc
+  source:
+    chart: cert-manager
+    repoURL: https://charts.jetstack.io
+    targetRevision: v1.13.2
+    helm:
+      valuesObject:
+        fullnameOverride: cert-manager
+        installCRDs: true
+        resources:
+          requests:
+            cpu: 75m
+            memory: 150Mi
+          limits:
+            cpu: 75m
+            memory: 150Mi
+        podDisruptionBudget:
+          enabled: true
+
+        prometheus:
+          servicemonitor:
+            enabled: false # true
+            labels:
+              prometheus.io/scrap-with: kube-prometheus-stack
+
+        extraArgs:
+          - --logging-format=json
+        webhook:
+          extraArgs:
+            - --logging-format=json
+        cainjector:
+          extraArgs:
+            - --logging-format=json
