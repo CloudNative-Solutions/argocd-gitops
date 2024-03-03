@@ -16,7 +16,7 @@ spec:
   project: default
   source:
     path: charts/eks-cluster
-    repoURL: git@github.com:CloudNative-Solutions/gitops.git
+    repoURL: git@github.com:CloudNative-Solutions/argocd-gitops.git
     targetRevision: HEAD
     helm:
       valueFiles:

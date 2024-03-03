@@ -23,5 +23,5 @@ spec:
       valueFiles:
         - $values/values/kind/argo-cd/values.yaml
   - ref: values
-    repoURL: 'git@github.com:CloudNative-Solutions/gitops.git'
+    repoURL: 'git@github.com:CloudNative-Solutions/argocd-gitops.git'
     targetRevision: HEAD

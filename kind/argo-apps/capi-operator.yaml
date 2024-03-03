@@ -17,7 +17,7 @@ spec:
   project: default
   source:
     path: charts/cluster-api-operator
-    repoURL: git@github.com:CloudNative-Solutions/gitops.git
+    repoURL: git@github.com:CloudNative-Solutions/argocd-gitops.git
     targetRevision: HEAD
     helm:
       valueFiles:
