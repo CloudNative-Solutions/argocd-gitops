@@ -1,0 +1,13 @@
+{{- range .Values.fargateProfiles }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: AWSFargateProfile
+metadata:
+  name: "{{ .name }}"
+  labels:
+    {{- include "eks-cluster.labels" $ | nindent 4 }}
+spec:
+  clusterName: "{{ $.Values.managedControlPlaneSpec.eksClusterName }}"
+  selectors:
+    {{- toYaml .selectors | nindent 4 }}
+{{- end }}

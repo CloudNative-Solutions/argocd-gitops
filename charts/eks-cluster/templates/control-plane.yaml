@@ -1,0 +1,9 @@
+---
+apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+kind: AWSManagedControlPlane
+metadata:
+  name: {{ .Values.managedControlPlaneSpec.eksClusterName }}-control-plane
+  labels:
+    {{- include "eks-cluster.labels" . | nindent 4 }}
+spec:
+  {{- toYaml .Values.managedControlPlaneSpec | nindent 2 }}

@@ -1,0 +1,24 @@
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: Cluster
+metadata:
+  name: {{ .Values.managedControlPlaneSpec.eksClusterName }}
+  labels:
+    {{- include "eks-cluster.labels" . | nindent 4 }}
+spec:
+  infrastructureRef:
+    apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+    kind: AWSManagedCluster
+    name: {{ .Values.managedControlPlaneSpec.eksClusterName }}
+  controlPlaneRef:
+    apiVersion: controlplane.cluster.x-k8s.io/v1beta2
+    kind: AWSManagedControlPlane
+    name: {{ .Values.managedControlPlaneSpec.eksClusterName }}-control-plane
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: AWSManagedCluster
+metadata:
+  name: {{ .Values.managedControlPlaneSpec.eksClusterName }}
+  labels:
+    {{- include "eks-cluster.labels" . | nindent 4 }}
+spec: {}

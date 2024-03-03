@@ -1,0 +1,26 @@
+managedControlPlaneSpec:
+  eksClusterName: eks-cluster
+  version: v1.25.0
+  region: us-east-1
+  sshKeyName: eks-cluster-ssh-key
+  addons: []
+  encryptionConfig: {}
+  endpointAccess: {}
+  iamAuthenticatorConfig: {}
+  logging: {}
+  network: {}
+
+nodeGroups: []
+# - name: eks-cluster-pool-0
+#   spec:
+#     instanceType: m5.large
+#     scaling:
+#       maxSize: 5
+#       minSize: 1
+
+fargateProfiles: []
+# - name: eks-cluster-fargate-profile-0
+#   selectors:
+#     - namespace: default
+#       labels:
+#         eks-cluster: fargate

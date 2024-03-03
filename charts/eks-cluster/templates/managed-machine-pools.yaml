@@ -1,0 +1,33 @@
+{{- range .Values.nodeGroups }}
+---
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachinePool
+metadata:
+  name: "{{ .name }}"
+  labels:
+    {{- include "eks-cluster.labels" $ | nindent 4 }}
+  {{- if .annotations }}
+  annotations:
+    {{- toYaml .annotations | nindent 4 }}
+  {{- end }}
+spec:
+  clusterName: "{{ $.Values.managedControlPlaneSpec.eksClusterName }}"
+  template:
+    spec:
+      bootstrap:
+        dataSecretName: ""
+      clusterName: "{{ $.Values.managedControlPlaneSpec.eksClusterName }}"
+      infrastructureRef:
+        apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+        kind: AWSManagedMachinePool
+        name: {{ .name }}
+---
+apiVersion: infrastructure.cluster.x-k8s.io/v1beta2
+kind: AWSManagedMachinePool
+metadata:
+  name: "{{ .name }}"
+  labels:
+    {{- include "eks-cluster.labels" $ | nindent 4 }}
+spec:
+  {{- toYaml .spec | nindent 2 }}
+{{- end }}
