@@ -1,0 +1,27 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ack-iam
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/oprinmarius/iam-controller
+    path: helm
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+      values: |-
+        aws:
+          region: us-east-1
+          credentials:
+            secretName: ack-iam
+            profile: default
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: ack-system
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
