@@ -1,0 +1,38 @@
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  name: control-plane.cluster-api-provider-aws.sigs.k8s.io
+spec:
+  name: control-plane.cluster-api-provider-aws.sigs.k8s.io
+  assumeRolePolicyDocument: >
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "ec2.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+            }
+        ]
+    }
+  policyRefs:
+    - from:
+        name: AWSIAMManagedPolicyControllers
+    - from:
+        name: AWSIAMManagedPolicyControllersEKS
+    - from:
+        name: AWSIAMManagedPolicyCloudProviderNodes
+    - from:
+        name: AWSIAMManagedPolicyCloudProviderControlPlane
+---
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: InstanceProfile
+metadata:
+  name: control-plane.cluster-api-provider-aws.sigs.k8s.io
+spec:
+  name: control-plane.cluster-api-provider-aws.sigs.k8s.io
+  roleRefs:
+    from:
+      name: control-plane.cluster-api-provider-aws.sigs.k8s.io

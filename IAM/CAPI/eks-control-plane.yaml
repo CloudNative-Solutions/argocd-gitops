@@ -1,0 +1,21 @@
+apiVersion: iam.services.k8s.aws/v1alpha1
+kind: Role
+metadata:
+  name: eks-controlplane.cluster-api-provider-aws.sigs.k8s.io
+spec:
+  name: eks-controlplane.cluster-api-provider-aws.sigs.k8s.io
+  assumeRolePolicyDocument: >
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "eks.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+            }
+        ]
+    }
+  policies:
+    - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
