@@ -1,5 +1,6 @@
 configs:
   cm:
+    ui.cssurl: https://cloudnativesolutions.ro/cns-branding/ArgoCD/CNS-style.css
     resource.customizations: |
       argoproj.io/Application:
         health.lua: |
